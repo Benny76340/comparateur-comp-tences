@@ -1,0 +1,49 @@
+﻿/* ✅ Reset global */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* ✅ Navbar pro et fixe */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 20px;
+}
+
+.navbar-links a {
+  text-decoration: none;
+  font-weight: bold;
+  color: #1a4e9e;
+  transition: color 0.3s;
+}
+
+.navbar-links a:hover {
+  color: #163d7a;
+}
+
+/* ✅ Contenu principal */
+.page-wrapper {
+  padding-top: 70px; /* Compense la navbar fixe */
+  min-height: calc(100vh - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9fafb;
+}
+
