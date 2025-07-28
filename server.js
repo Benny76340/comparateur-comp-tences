@@ -7,7 +7,7 @@ dotenv.config();
 const app = express();
 app.use(cors());
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 const AIRTABLE_BASE_ID = process.env.VITE_AIRTABLE_BASE_ID;
 const API_KEY = process.env.VITE_AIRTABLE_API_KEY;
 const AIRTABLE_URL = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}`;
