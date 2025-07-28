@@ -8,7 +8,7 @@ export default function Comparateur() {
     const [selectedSkills, setSelectedSkills] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:5000/api/jobs")
+        axios.get("/.netlify/functions/server/api/jobs") // ✅ Modifié ici
             .then(res => setJobs(res.data))
             .catch(() => console.error("Erreur lors du chargement des métiers."));
     }, []);
@@ -79,7 +79,6 @@ export default function Comparateur() {
                         Comparateur de Métiers
                     </h1>
 
-                    {/* Sélecteurs */}
                     <div style={{
                         display: "flex",
                         justifyContent: "center",
@@ -102,7 +101,6 @@ export default function Comparateur() {
                         </select>
                     </div>
 
-                    {/* Fiches métiers */}
                     <div style={{
                         display: "flex",
                         justifyContent: "space-around",
@@ -160,7 +158,6 @@ export default function Comparateur() {
                         )}
                     </div>
 
-                    {/* Comparaison */}
                     {currentJob && targetJob && (
                         <div style={{
                             marginTop: "40px",
