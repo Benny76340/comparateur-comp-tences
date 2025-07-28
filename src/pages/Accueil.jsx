@@ -1,6 +1,6 @@
 ﻿import React from "react";
 import { Link } from "react-router-dom";
-import "./Accueil.css";
+import './accueil.css';
 
 export default function Accueil() {
   return (
