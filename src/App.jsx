@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Accueil from "./pages/Accueil";
 import Comparateur from "./pages/Comparateur";
 import FichesMetiers from "./pages/FichesMetiers";
-import "./App.css";
 import TestSoftSkills from "./pages/TestSoftSkills";
+import "./App.css";
 
 export default function App() {
   return (
@@ -15,6 +15,7 @@ export default function App() {
           <Link to="/">Accueil</Link>
           <Link to="/comparateur">Comparateur</Link>
           <Link to="/fiches-metiers">Fiches Métiers</Link>
+          <Link to="/test-soft-skills">Test Soft Skills</Link> {/* ✅ Lien ajouté */}
         </div>
       </nav>
 
@@ -24,8 +25,7 @@ export default function App() {
           <Route path="/" element={<Accueil />} />
           <Route path="/comparateur" element={<Comparateur />} />
           <Route path="/fiches-metiers" element={<FichesMetiers />} />
-          <Route path="/test-soft-skills" element={<TestSoftSkills />} />
-
+          <Route path="/test-soft-skills" element={<TestSoftSkills />} /> {/* ✅ Route déjà OK */}
         </Routes>
       </div>
     </Router>
