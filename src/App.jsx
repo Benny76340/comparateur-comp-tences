@@ -4,6 +4,7 @@ import Accueil from "./pages/Accueil";
 import Comparateur from "./pages/Comparateur";
 import FichesMetiers from "./pages/FichesMetiers";
 import "./App.css";
+import TestSoftSkills from "./pages/TestSoftSkills";
 
 export default function App() {
   return (
@@ -23,6 +24,8 @@ export default function App() {
           <Route path="/" element={<Accueil />} />
           <Route path="/comparateur" element={<Comparateur />} />
           <Route path="/fiches-metiers" element={<FichesMetiers />} />
+          <Route path="/test-soft-skills" element={<TestSoftSkills />} />
+
         </Routes>
       </div>
     </Router>
