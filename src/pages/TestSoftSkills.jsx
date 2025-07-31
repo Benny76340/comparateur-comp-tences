@@ -1,6 +1,5 @@
 ﻿import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../App.css";
 
 const questions = [
   {
@@ -46,112 +45,130 @@ const questions = [
   {
     text: "Dans une journée chargée, vous...",
     options: [
-      { label: "Priorisez efficacement", skill: "Organisation" },
-      { label: "Restez calme et concentré", skill: "Maîtrise de soi" },
-      { label: "Multitâchez facilement", skill: "Adaptabilité" }
+      { label: "Priorisez efficacement", skill: "Priorisation" },
+      { label: "Restez calme et concentré", skill: "Gestion du stress" },
+      { label: "Multitâchez facilement", skill: "Polyvalence" }
     ]
   },
   {
     text: "Quel type de retour appréciez-vous ?",
     options: [
-      { label: "Constructif et direct", skill: "Sincérité" },
-      { label: "Bienveillant et encourageant", skill: "Empathie" },
-      { label: "Factuel et argumenté", skill: "Rigueur" }
+      { label: "Direct et constructif", skill: "Esprit critique" },
+      { label: "Positif et bienveillant", skill: "Bienveillance" },
+      { label: "Détaillé et argumenté", skill: "Analyse" }
     ]
   },
   {
-    text: "Comment abordez-vous une nouveauté ?",
+    text: "Face à un nouvel outil numérique, vous...",
     options: [
-      { label: "Avec enthousiasme", skill: "Curiosité" },
-      { label: "Avec prudence", skill: "Réflexion" },
-      { label: "Avec méthode", skill: "Organisation" }
+      { label: "Explorez par vous-même", skill: "Autonomie" },
+      { label: "Suivez une formation ou un tutoriel", skill: "Méthode" },
+      { label: "Demandez à un collègue de vous montrer", skill: "Curiosité" }
     ]
   },
   {
-    text: "Si un collègue est en difficulté, vous...",
+    text: "Quand un collègue est en difficulté, vous...",
     options: [
-      { label: "L’écoutez attentivement", skill: "Écoute" },
-      { label: "L’aidez à relativiser", skill: "Optimisme" },
-      { label: "Lui proposez une solution concrète", skill: "Réactivité" }
+      { label: "Proposez spontanément votre aide", skill: "Solidarité" },
+      { label: "Analysez la situation avant d’agir", skill: "Sens de l’analyse" },
+      { label: "Encouragez sans imposer", skill: "Respect" }
     ]
   },
   {
-    text: "Vous vous sentez le plus utile quand...",
+    text: "Pour apprendre efficacement, vous avez besoin...",
     options: [
-      { label: "Vous motivez une équipe", skill: "Inspiration" },
-      { label: "Vous résolvez un problème", skill: "Esprit d’analyse" },
-      { label: "Vous aidez un collègue à progresser", skill: "Transmission" }
+      { label: "De pratiquer concrètement", skill: "Sens pratique" },
+      { label: "D’un cadre clair et structuré", skill: "Méthodologie" },
+      { label: "D’un objectif motivant", skill: "Motivation" }
     ]
   }
 ];
 
 export default function TestSoftSkills() {
   const [answers, setAnswers] = useState({});
-  const [topSkills, setTopSkills] = useState([]);
+  const [results, setResults] = useState(null);
+  const [metiers, setMetiers] = useState([]);
 
-  const handleChange = (qIndex, skill) => {
-    setAnswers({ ...answers, [qIndex]: skill });
+  const handleAnswer = (questionIndex, skill) => {
+    setAnswers(prev => ({ ...prev, [questionIndex]: skill }));
+  };
+
+  const computeResults = () => {
+    const count = {};
+    Object.values(answers).forEach(skill => {
+      count[skill] = (count[skill] || 0) + 1;
+    });
+    const sorted = Object.entries(count).sort((a, b) => b[1] - a[1]);
+    const topSkills = sorted.slice(0, 2).map(([skill]) => skill);
+    setResults(topSkills);
   };
 
   useEffect(() => {
-    const counts = {};
-    Object.values(answers).forEach(skill => {
-      counts[skill] = (counts[skill] || 0) + 1;
-    });
-    const sorted = Object.entries(counts)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 3)
-      .map(([skill]) => skill);
-    setTopSkills(sorted);
-  }, [answers]);
+    if (results) {
+      const fetchMetiers = async () => {
+        try {
+          const res = await axios.get("/.netlify/functions/getQualitesHumaines");
+          const data = res.data;
+          const filtered = data.filter(item =>
+            item.qualites.some(q => results.includes(q))
+          );
+          setMetiers(filtered);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      fetchMetiers();
+    }
+  }, [results]);
 
   return (
-    <div style={{ maxWidth: "900px", margin: "0 auto", padding: "20px" }}>
-      <h1 style={{ color: "#1a4e9e", textAlign: "center", marginBottom: "30px" }}>
-        Testez vos compétences générales
-      </h1>
-      {questions.map((q, index) => (
-        <div
-          key={index}
-          style={{
-            marginBottom: "30px",
-            padding: "20px",
-            background: "#f9f9f9",
-            borderRadius: "10px",
-            boxShadow: "0 2px 6px rgba(0,0,0,0.08)"
-          }}
-        >
-          <h3 style={{ marginBottom: "10px" }}>{q.text}</h3>
-          {q.options.map((opt, i) => (
-            <div key={i}>
-              <label>
-                <input
-                  type="radio"
-                  name={`question-${index}`}
-                  value={opt.skill}
-                  checked={answers[index] === opt.skill}
-                  onChange={() => handleChange(index, opt.skill)}
-                  style={{ marginRight: "8px" }}
-                />
-                {opt.label}
-              </label>
+    <div className="max-w-3xl mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold text-blue-900 mb-6">Testez vos compétences générales</h1>
+      {!results && (
+        <form onSubmit={e => { e.preventDefault(); computeResults(); }}>
+          {questions.map((q, index) => (
+            <div key={index} className="bg-gray-50 p-4 rounded-xl shadow-md mb-6">
+              <p className="font-semibold mb-2">{q.text}</p>
+              {q.options.map((opt, idx) => (
+                <label key={idx} className="block mb-1">
+                  <input
+                    type="radio"
+                    name={`q-${index}`}
+                    value={opt.skill}
+                    onChange={() => handleAnswer(index, opt.skill)}
+                    className="mr-2"
+                    required
+                  />
+                  {opt.label}
+                </label>
+              ))}
             </div>
           ))}
-        </div>
-      ))}
+          <button
+            type="submit"
+            className="bg-blue-700 hover:bg-blue-800 text-white px-6 py-2 rounded-xl shadow"
+          >
+            Voir mes résultats
+          </button>
+        </form>
+      )}
 
-      {topSkills.length > 0 && (
-        <div style={{
-          marginTop: "40px",
-          padding: "20px",
-          borderRadius: "10px",
-          backgroundColor: "#e3f2fd",
-          textAlign: "center"
-        }}>
-          <h2 style={{ color: "#1a4e9e" }}>Top Soft Skills identifiés :</h2>
-          <ul style={{ listStyle: "none", padding: 0 }}>
-            {topSkills.map((skill, i) => (
-              <li key={i} style={{ fontSize: "18px", margin: "10px 0" }}>✅ {skill}</li>
+      {results && (
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold text-green-700 mb-4">Vos soft skills dominants</h2>
+          <ul className="list-disc pl-6 mb-6">
+            {results.map((skill, idx) => (
+              <li key={idx} className="text-lg">{skill}</li>
+            ))}
+          </ul>
+          <h3 className="text-xl font-semibold mb-2">Métiers correspondants</h3>
+          <ul className="list-disc pl-6">
+            {metiers.map((m, idx) => (
+              <li key={idx}>
+                <a href={`/fiches-metiers#${m.nom}`} className="text-blue-700 hover:underline">
+                  {m.nom}
+                </a>
+              </li>
             ))}
           </ul>
         </div>
