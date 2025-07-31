@@ -10,12 +10,8 @@ export default function FichesMetiers() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await axios.get(import.meta.env.VITE_API_URL, {
-          headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_API_KEY}`
-          }
-        });
-        setJobs(res.data.records.map(record => ({
+        const res = await axios.get("/.netlify/functions/getMetiers");
+        setJobs(res.data.map(record => ({
           id: record.id,
           ...record.fields
         })));
