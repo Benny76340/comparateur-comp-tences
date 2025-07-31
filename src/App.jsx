@@ -4,6 +4,7 @@ import Accueil from "./pages/Accueil";
 import Comparateur from "./pages/Comparateur";
 import FichesMetiers from "./pages/FichesMetiers";
 import TestSoftSkills from "./pages/TestSoftSkills";
+import FicheDetail from "./pages/FicheDetail"; // ✅ Import ajouté
 import "./App.css";
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/comparateur" element={<Comparateur />} />
           <Route path="/fiches-metiers" element={<FichesMetiers />} />
           <Route path="/test-soft-skills" element={<TestSoftSkills />} /> {/* ✅ Route déjà OK */}
+          <Route path="/fiche/:id" element={<FicheDetail />} /> {/* ✅ Route ajoutée pour les fiches détaillées */}
         </Routes>
       </div>
     </Router>

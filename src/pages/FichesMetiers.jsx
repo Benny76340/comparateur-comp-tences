@@ -30,7 +30,7 @@ export default function FichesMetiers() {
   }, []);
 
   const filteredJobs = jobs.filter((j) =>
-    j.nom.toLowerCase().includes(search.toLowerCase())
+    j.nom && j.nom.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
