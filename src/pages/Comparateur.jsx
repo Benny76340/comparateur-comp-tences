@@ -6,10 +6,17 @@ export default function Comparateur() {
     const [currentJobId, setCurrentJobId] = useState("");
     const [targetJobId, setTargetJobId] = useState("");
     const [selectedSkills, setSelectedSkills] = useState([]);
+    const [allSkills, setAllSkills] = useState([]);
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
-        axios.get("/.netlify/functions/server/api/jobs") // ✅ Modifié ici
-            .then(res => setJobs(res.data))
+        axios.get("/.netlify/functions/server/api/jobs")
+            .then(res => {
+                setJobs(res.data);
+                const uniqueSkills = new Set();
+                res.data.forEach(job => job.competences.forEach(c => uniqueSkills.add(c)));
+                setAllSkills(Array.from(uniqueSkills));
+            })
             .catch(() => console.error("Erreur lors du chargement des métiers."));
     }, []);
 
@@ -101,6 +108,45 @@ export default function Comparateur() {
                         </select>
                     </div>
 
+                    {/* ✅ Barre de recherche de compétences */}
+                    <div style={{ maxWidth: "500px", margin: "0 auto", marginBottom: "30px" }}>
+                        <input
+                            type="text"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            placeholder="Rechercher une compétence à ajouter"
+                            style={{ ...selectStyle, width: "100%" }}
+                        />
+                        {search && (
+                            <ul style={{ listStyle: "none", padding: 0, marginTop: "10px" }}>
+                                {allSkills
+                                    .filter(skill => skill.toLowerCase().includes(search.toLowerCase()))
+                                    .slice(0, 5)
+                                    .map((skill, index) => (
+                                        <li key={index} style={{ marginBottom: "5px" }}>
+                                            <button
+                                                onClick={() => {
+                                                    handleSkillChange(skill);
+                                                    setSearch("");
+                                                }}
+                                                style={{
+                                                    background: "#1a4e9e",
+                                                    color: "#fff",
+                                                    border: "none",
+                                                    padding: "6px 12px",
+                                                    borderRadius: "4px",
+                                                    cursor: "pointer"
+                                                }}
+                                            >
+                                                Ajouter : {skill}
+                                            </button>
+                                        </li>
+                                    ))}
+                            </ul>
+                        )}
+                    </div>
+
+                    {/* Fiches métiers */}
                     <div style={{
                         display: "flex",
                         justifyContent: "space-around",
@@ -158,6 +204,7 @@ export default function Comparateur() {
                         )}
                     </div>
 
+                    {/* Comparaison */}
                     {currentJob && targetJob && (
                         <div style={{
                             marginTop: "40px",
@@ -198,7 +245,6 @@ export default function Comparateur() {
     );
 }
 
-// ✅ Styles réutilisables
 const selectStyle = {
     padding: "10px",
     fontSize: "16px",
