@@ -1,6 +1,7 @@
 ﻿import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import QuestionnaireParMetier from "../components/QuestionnaireParMetier";
 
 export default function FicheDetail() {
   const { id } = useParams();
@@ -10,12 +11,9 @@ export default function FicheDetail() {
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/${id}`, {
-          headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_API_KEY}`
-          }
-        });
-        setJob({ id: res.data.id, ...res.data.fields });
+        const res = await axios.get("/.netlify/functions/getmetiers");
+        const record = res.data.find((r) => r.id === id);
+        setJob(record?.fields || null);
       } catch (error) {
         console.error("Erreur lors du chargement de la fiche métier :", error);
       } finally {
@@ -31,31 +29,34 @@ export default function FicheDetail() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1>{job.nom}</h1>
-      <p><b>Code ROME :</b> {job.codeROME}</p>
-      <p><b>Description :</b> {job.description}</p>
+      <h1>{job["Nom métier"]}</h1>
+      <p><b>Code ROME :</b> {job["Code ROME"]}</p>
+      <p><b>Description :</b> {job["Description"]}</p>
 
-      {job.competencesTechniques && (
+      {job["Compétences techniques"] && (
         <div>
           <h3>Compétences techniques</h3>
           <ul>
-            {job.competencesTechniques.map((comp, index) => (
+            {job["Compétences techniques"].map((comp, index) => (
               <li key={index}>{comp}</li>
             ))}
           </ul>
         </div>
       )}
 
-      {job.qualitesHumaines && (
+      {job["Qualités humaines"] && (
         <div>
           <h3>Qualités humaines</h3>
           <ul>
-            {job.qualitesHumaines.map((qualite, index) => (
+            {job["Qualités humaines"].map((qualite, index) => (
               <li key={index}>{qualite}</li>
             ))}
           </ul>
         </div>
       )}
+
+      <hr style={{ margin: "30px 0" }} />
+      <QuestionnaireParMetier nomMetier={job["Nom métier"]} />
     </div>
   );
 }
