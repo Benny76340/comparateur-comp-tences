@@ -1,3 +1,2 @@
-﻿[build]
+[build]
 functions = netlify/functions
-
