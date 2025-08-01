@@ -10,7 +10,7 @@ export default function FichesMetiers() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await axios.get("/.netlify/functions/getMetiers");
+        const res = await axios.get("/.netlify/functions/getmetiers");
         setJobs(res.data.map(record => ({
           id: record.id,
           ...record.fields
