@@ -1,10 +1,8 @@
 ﻿import React, { useState } from "react";
-import { useParams } from "react-router-dom";
 import questionnaires from "../data/questionnaires";
 
-export default function QuestionnaireParMetier() {
-  const { id } = useParams();
-  const questions = questionnaires[id];
+export default function QuestionnaireParMetier({ nomMetier }) {
+  const questions = questionnaires[nomMetier];
   const [answers, setAnswers] = useState(Array(questions?.length || 0).fill(null));
   const [submitted, setSubmitted] = useState(false);
 

@@ -33,7 +33,7 @@ export default function FicheDetail() {
       <p><b>Code ROME :</b> {job["Code ROME"]}</p>
       <p><b>Description :</b> {job["Description"]}</p>
 
-      {job["Compétences techniques"] && (
+      {Array.isArray(job["Compétences techniques"]) && job["Compétences techniques"].length > 0 && (
         <div>
           <h3>Compétences techniques</h3>
           <ul>
@@ -44,7 +44,7 @@ export default function FicheDetail() {
         </div>
       )}
 
-      {job["Qualités humaines"] && (
+      {Array.isArray(job["Qualités humaines"]) && job["Qualités humaines"].length > 0 && (
         <div>
           <h3>Qualités humaines</h3>
           <ul>
@@ -56,6 +56,7 @@ export default function FicheDetail() {
       )}
 
       <hr style={{ margin: "30px 0" }} />
+      <h2>Questionnaire de positionnement</h2>
       <QuestionnaireParMetier nomMetier={job["Nom métier"]} />
     </div>
   );
