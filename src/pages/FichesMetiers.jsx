@@ -9,14 +9,18 @@ export default function FichesMetiers() {
 
   useEffect(() => {
     const fetchJobs = async () => {
+      console.log("📡 Appel à la fonction Netlify getmetiers...");
+
       try {
         const res = await axios.get("/.netlify/functions/getmetiers");
+        console.log("✅ Données reçues :", res.data);
+
         setJobs(res.data.map(record => ({
           id: record.id,
           ...record.fields
         })));
       } catch (error) {
-        console.error("Erreur lors du chargement des métiers :", error);
+        console.error("❌ Erreur lors du chargement des métiers :", error);
       } finally {
         setLoading(false);
       }
@@ -42,9 +46,17 @@ export default function FichesMetiers() {
       {loading ? (
         <p>Chargement des métiers...</p>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "15px" }}>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gap: "15px"
+        }}>
           {filteredJobs.map((job) => (
-            <div key={job.id} style={{ border: "1px solid #ccc", padding: "10px", borderRadius: "8px" }}>
+            <div key={job.id} style={{
+              border: "1px solid #ccc",
+              padding: "10px",
+              borderRadius: "8px"
+            }}>
               <h3>{job.nom}</h3>
               <p><b>Code ROME :</b> {job.codeROME}</p>
               <p>{job.description}</p>

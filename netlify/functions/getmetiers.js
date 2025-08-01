@@ -1,7 +1,7 @@
 ﻿const axios = require("axios");
 
 exports.handler = async function (event, context) {
-  console.log("➡️ Fonction getMetiers appelée");
+  console.log("➡️ Fonction getmetiers appelée");
 
   try {
     const url = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/Métiers`;
